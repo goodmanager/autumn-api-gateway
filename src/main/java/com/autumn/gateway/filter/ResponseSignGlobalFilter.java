@@ -90,7 +90,7 @@ public class ResponseSignGlobalFilter implements GlobalFilter, Ordered {
 						exchange.getResponse().getHeaders());
 
 					return bodyInserter.insert(outputMessage, new BodyInserterContext()).then(Mono.defer(() -> {
-						Flux<DataBuffer> flux = rebuildResponseBody(responseEncrypt, exchange, outputMessage,
+						Flux<DataBuffer> flux = rebuildResponseBody(exchange, outputMessage,
 							getDelegate());
 						HttpHeaders headers = getDelegate().getHeaders();
 						if (!headers.containsKey(HttpHeaders.TRANSFER_ENCODING)) {
@@ -110,7 +110,7 @@ public class ResponseSignGlobalFilter implements GlobalFilter, Ordered {
 		}
 	}
 
-	private Flux<DataBuffer> rebuildResponseBody(int responseEncrypt, ServerWebExchange exchange,
+	private Flux<DataBuffer> rebuildResponseBody(ServerWebExchange exchange,
 	                                             CachedBodyOutputMessage outputMessage, ServerHttpResponse delegate) {
 		Flux<DataBuffer> messageBody = outputMessage.getBody();
 		return messageBody.map(buffer -> {
